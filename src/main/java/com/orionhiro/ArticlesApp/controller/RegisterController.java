@@ -33,7 +33,7 @@ public class RegisterController {
             return "register";
         }
 
-        log.info(userService.createUser(registerRequest).toString());
+        userService.createUser(registerRequest).toString();
         return "redirect:/";
     }
 }
