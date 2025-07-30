@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,7 @@ import com.orionhiro.ArticlesApp.dto.RegisterDTO;
 import com.orionhiro.ArticlesApp.dto.UserDTO;
 import com.orionhiro.ArticlesApp.entity.Role;
 import com.orionhiro.ArticlesApp.entity.User;
+import com.orionhiro.ArticlesApp.listener.SendActivationMailEvent;
 import com.orionhiro.ArticlesApp.mapper.UserMapper;
 import com.orionhiro.ArticlesApp.repository.UserRepository;
 
@@ -24,6 +26,7 @@ import lombok.AllArgsConstructor;
 public class UserService implements UserDetailsService{
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private ApplicationEventPublisher eventPublisher;
 
     public UserDTO createUser(RegisterDTO registerDTO){
         User user = userRepository.save(
@@ -37,7 +40,9 @@ public class UserService implements UserDetailsService{
                 .isActive(false)
                 .activationCode(UUID.randomUUID().toString())
                 .build());
-        
+
+        eventPublisher.publishEvent(new SendActivationMailEvent(user));
+
         return UserMapper.INSTANCE.mapToUserDTO(user);
     }
 

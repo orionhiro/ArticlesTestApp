@@ -34,3 +34,6 @@ target
 
 # Resources folder
 *.properties
+
+# env files
+*.env
