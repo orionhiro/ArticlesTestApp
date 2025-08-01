@@ -2,6 +2,7 @@ package com.orionhiro.ArticlesApp.service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -56,5 +57,13 @@ public class UserService implements UserDetailsService{
                     Collections.singleton(Role.USER)
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + email));
+    }
+
+    public void activateAccount(String code){
+        Optional<User> user = userRepository.findByActivationCode(code);
+        if(user.isPresent()){
+            user.get().setIsActive(true);
+            userRepository.flush();
+        }
     }
 }
