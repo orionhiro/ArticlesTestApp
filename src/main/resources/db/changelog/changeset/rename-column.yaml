@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: orionhiro
+      changes:
+        - renameColumn:
+            tableName: articles
+            oldColumnName: name
+            newColumnName: title
+            columnDataType: VARCHAR(255)

@@ -3,6 +3,7 @@ package com.orionhiro.ArticlesApp.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,9 @@ public class User {
     private String email;
     private String password;
     private LocalDate birthday;
+    @Column(name="created_at")
     private LocalDateTime createdAt;
+    @Column(name = "is_active")
     private Boolean isActive;
     private String activationCode;
 }

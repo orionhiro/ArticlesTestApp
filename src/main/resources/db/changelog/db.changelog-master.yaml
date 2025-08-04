@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changeset/create-basic-tables.yaml
+  - include:
+      file: db/changelog/changeset/rename-column.yaml
+  - include:
+      file: db/changelog/changeset/change-column-type.yaml

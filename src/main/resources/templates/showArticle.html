@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
+
+    <title>Добавить статью</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/article-form.css}" rel="stylesheet">
+  </head>
+  <body>
+    <main role="main" class="min-vh-100 d-flex align-items-center bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="card border-0 shadow rounded-3">
+                        <div class="card-body p-5" th:object="${articleDTO}">
+                            <h1 class="h4 text-theme mb-3 text-center" th:text="*{title}">Заголовок статьи</h1>
+
+                            <p class="text-muted text-center mb-4">Автор: <strong th:text="*{author.name}">Иван Иванов</strong> | <span th:text="${#temporals.format(articleDTO.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</span></p>
+
+                            <div class="mb-4">
+                                <img th:src="@{'/images/' + *{image}}" alt="Обложка статьи" class="img-fluid rounded w-100">
+                            </div>
+
+                            <article class="mb-4" th:text="*{content}" style="white-space: pre-line;">
+                            </article>
+                        </div>
+                    </div>
+
+                    <p class="text-muted text-center mt-3 mb-0">
+                        <a href="/" class="text-primary">← Назад к списку статей</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        const form = document.getElementById('registerForm');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const mismatchText = document.getElementById('passwordMismatch');
+
+        form.addEventListener('submit', function (e) {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                e.preventDefault();
+                mismatchText.style.visibility = 'visible';
+            } else {
+                mismatchText.style.visibility = 'hidden';
+            }
+        });
+    </script>
+
+  </body>
+</html>

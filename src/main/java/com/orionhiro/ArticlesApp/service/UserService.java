@@ -21,9 +21,11 @@ import com.orionhiro.ArticlesApp.mapper.UserMapper;
 import com.orionhiro.ArticlesApp.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService{
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
@@ -65,5 +67,9 @@ public class UserService implements UserDetailsService{
             user.get().setIsActive(true);
             userRepository.flush();
         }
+    }
+
+    public boolean checkIsActivated(String email){
+        return userRepository.findByEmail(email).map(User::getIsActive).orElse(false);
     }
 }
