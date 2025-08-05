@@ -17,4 +17,5 @@ public class ArticleDTO {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     private String image;
+    private String url_alias;
 }

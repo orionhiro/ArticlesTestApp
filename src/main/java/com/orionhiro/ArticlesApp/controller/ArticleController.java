@@ -18,7 +18,9 @@ import com.orionhiro.ArticlesApp.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/article")
 @AllArgsConstructor
@@ -39,23 +41,36 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String addArticle(
-        @Valid @ModelAttribute("articleDTO") CreateArticleDTO createArticleDTO, 
-        BindingResult bindingResult,
-        @AuthenticationPrincipal UserDetails userDetails){
-        
+            @Valid @ModelAttribute("articleDTO") CreateArticleDTO createArticleDTO, 
+            BindingResult bindingResult,
+            @AuthenticationPrincipal UserDetails userDetails
+        ){
+
         if(bindingResult.hasErrors()){
             return "createArticle";
         }
-        
         ArticleDTO articleDTO = articleService.createArticle(createArticleDTO, userDetails.getUsername());
-        return "redirect:/article/" + articleDTO.getId();
+        return "redirect:/article/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
     }
 
     @GetMapping("/{id}")
-    public String showArticle(Model model, @PathVariable("id") long id){
+    public String showArticle(Model model, @PathVariable("id") Long id){
         ArticleDTO articleDTO = articleService.getArticleById(id);
         model.addAttribute("articleDTO", articleDTO);
 
         return "showArticle";
     }
+
+    @GetMapping("/{id}-{alias}")
+    public String showArticleAlias(
+            Model model, 
+            @PathVariable("id") Long id, 
+            @PathVariable("alias") String alias
+        ){
+        ArticleDTO articleDTO = articleService.getArticleByAlias(id, alias);
+        model.addAttribute("articleDTO", articleDTO);
+
+        return "showArticle";
+    }
+
 }

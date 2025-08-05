@@ -28,6 +28,7 @@ public class ArticleService {
     public ArticleDTO createArticle(CreateArticleDTO articleDTO, String authorEmail){
         uploadImage(articleDTO.getImage());
         var author = userRepository.findByEmail(authorEmail).get();
+
         Article article = articleRepository.save(
             Article
                 .builder()
@@ -54,5 +55,15 @@ public class ArticleService {
         return articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article with id " + id + " not found")
         );
+    }
+
+    public ArticleDTO getArticleByAlias(long id, String alias){
+        return articleRepository
+                .findById(id)
+                .filter(article -> article.getUrl_alias().equals(alias))
+                .map(ArticleMapper.INSTANCE::mapToArticleDTO)
+                .orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article with id " + id + " not found")
+                );
     }
 }

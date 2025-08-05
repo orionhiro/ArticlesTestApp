@@ -20,8 +20,8 @@
 
                             <p class="text-muted text-center mb-4">Автор: <strong th:text="*{author.name}">Иван Иванов</strong> | <span th:text="${#temporals.format(articleDTO.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</span></p>
 
-                            <div class="mb-4">
-                                <img th:src="@{'/images/' + *{image}}" alt="Обложка статьи" class="img-fluid rounded w-100">
+                            <div class="mb-4" th:if="${image != null and #strings.hasText(image)}">
+                                <img  th:src="@{'/images/' + *{image}}" alt="Обложка статьи" class="img-fluid rounded w-100">
                             </div>
 
                             <article class="mb-4" th:text="*{content}" style="white-space: pre-line;">
