@@ -53,7 +53,7 @@ public class ArticleController {
         return "redirect:/article/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public String showArticle(Model model, @PathVariable("id") Long id){
         ArticleDTO articleDTO = articleService.getArticleById(id);
         model.addAttribute("articleDTO", articleDTO);
@@ -61,12 +61,13 @@ public class ArticleController {
         return "showArticle";
     }
 
-    @GetMapping("/{id}-{alias}")
+    @GetMapping("/{id:\\d+}-{alias}")
     public String showArticleAlias(
             Model model, 
             @PathVariable("id") Long id, 
             @PathVariable("alias") String alias
         ){
+        log.info("controller works!!");
         ArticleDTO articleDTO = articleService.getArticleByAlias(id, alias);
         model.addAttribute("articleDTO", articleDTO);
 
