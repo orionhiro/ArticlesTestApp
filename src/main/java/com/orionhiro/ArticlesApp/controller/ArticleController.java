@@ -18,9 +18,7 @@ import com.orionhiro.ArticlesApp.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/article")
 @AllArgsConstructor
@@ -55,7 +53,7 @@ public class ArticleController {
 
     @GetMapping("/{id:\\d+}")
     public String showArticle(Model model, @PathVariable("id") Long id){
-        ArticleDTO articleDTO = articleService.getArticleById(id);
+        ArticleDTO articleDTO = articleService.findArticleById(id);
         model.addAttribute("articleDTO", articleDTO);
 
         return "showArticle";
@@ -67,8 +65,7 @@ public class ArticleController {
             @PathVariable("id") Long id, 
             @PathVariable("alias") String alias
         ){
-        log.info("controller works!!");
-        ArticleDTO articleDTO = articleService.getArticleByAlias(id, alias);
+        ArticleDTO articleDTO = articleService.findArticleByAlias(id, alias);
         model.addAttribute("articleDTO", articleDTO);
 
         return "showArticle";

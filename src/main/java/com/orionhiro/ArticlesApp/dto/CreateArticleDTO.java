@@ -18,6 +18,7 @@ public class CreateArticleDTO {
     @Size(max = 100, message = "Название не должно быть слишком длинным")
     private String title;
     @NotBlank(message = "Содержимое не должно быть пустым")
+    @Size(min = 50, message = "Статья не должна быть слишком короткой")
     private String content;
     private MultipartFile image;
 }

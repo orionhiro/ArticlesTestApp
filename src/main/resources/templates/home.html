@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
+
+    <title>Главная</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/auth-page.css}" rel="stylesheet">
+  </head>
+
+  <body>
+    <main role="main">
+        <div class="container mt-5">
+            <h2 class="mb-4 text-theme">Свежие статьи</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4" th:each="article: ${articleList.content}">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title" th:text="${article.title}">Заголовок статьи</h5>
+                            <p class="card-text text-muted" th:text="${#temporals.format(article.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</p>
+                            <p class="card-text text-muted mb-3">Автор: <strong th:text="*{article.author.name}">Иван Иванов</strong></p>
+                            <p class="card-text flex-grow-1" th:text="${#strings.substring(article.content, 0, 100) + '...'}">Краткое описание статьи или вступительный абзац, который заинтересует читателя...</p>
+                            <a th:href="@{'/article/' + ${article.id} + '-' + ${article.url_alias}}" class="btn btn-theme mt-auto">Читать</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav aria-label="Пагинация статей" class="mt-4">
+          <ul class="pagination justify-content-center">
+              <li class="page-item" th:if="${articleList.metadata.page} > 0">
+                  <a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page}}" tabindex="-1">Предыдущая</a>
+              </li>
+              <li class="page-item" th:if="${articleList.metadata.page} > 0"><a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page}}" th:text="${articleList.metadata.page}">1</a></li>
+              <li class="page-item active"><a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page + 1}}" th:text="${articleList.metadata.page + 1}">2</a></li>
+              <li class="page-item" th:if="${articleList.metadata.page + 1} < ${articleList.metadata.totalPages}"><a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page + 2}}" th:text="${articleList.metadata.page + 2}">3</a></li>
+              <li class="page-item" th:if="${articleList.metadata.page} < ${articleList.metadata.totalPages - 1}">
+                  <a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page + 2}}">Следующая</a>
+              </li>
+          </ul>
+      </nav>
+
+    </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+
+  </body>
+</html>

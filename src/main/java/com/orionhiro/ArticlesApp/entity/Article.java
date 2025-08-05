@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.orionhiro.ArticlesApp.utils.AliasUtil;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,8 +36,10 @@ public class Article {
     private User author;
     private String url_alias;
     private String content;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     private String image;
 
     @PrePersist
