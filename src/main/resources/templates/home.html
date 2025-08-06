@@ -8,9 +8,24 @@
 
     <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/auth-page.css}" rel="stylesheet">
+    <style>
+        .text-theme {
+            color: #5369f8 !important;
+        }
+
+        .btn-theme {
+            background-color: #5369f8;
+            border-color: #5369f8;
+            color: #fff;
+        }
+        body{
+            margin-top:0px;
+        }
+    </style>
   </head>
 
   <body>
+    <nav th:insert="~{navbar :: navbar}"></nav>
     <main role="main">
         <div class="container mt-5">
             <h2 class="mb-4 text-theme">Свежие статьи</h2>
@@ -22,7 +37,7 @@
                             <p class="card-text text-muted" th:text="${#temporals.format(article.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</p>
                             <p class="card-text text-muted mb-3">Автор: <strong th:text="*{article.author.name}">Иван Иванов</strong></p>
                             <p class="card-text flex-grow-1" th:text="${#strings.substring(article.content, 0, 100) + '...'}">Краткое описание статьи или вступительный абзац, который заинтересует читателя...</p>
-                            <a th:href="@{'/article/' + ${article.id} + '-' + ${article.url_alias}}" class="btn btn-theme mt-auto">Читать</a>
+                            <a th:href="@{'/articles/' + ${article.id} + '-' + ${article.url_alias}}" class="btn btn-theme mt-auto">Читать</a>
                         </div>
                     </div>
                 </div>

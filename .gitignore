@@ -33,7 +33,7 @@ target
 .vscode
 
 # Resources folder
-*.properties
+# *.properties
 
 # env files
 *.env

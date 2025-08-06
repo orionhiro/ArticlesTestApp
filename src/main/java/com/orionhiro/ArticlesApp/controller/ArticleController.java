@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/article")
+@RequestMapping("/articles")
 @AllArgsConstructor
 public class ArticleController {
 
@@ -48,7 +48,7 @@ public class ArticleController {
             return "createArticle";
         }
         ArticleDTO articleDTO = articleService.createArticle(createArticleDTO, userDetails.getUsername());
-        return "redirect:/article/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
+        return "redirect:/articles/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
     }
 
     @GetMapping("/{id:\\d+}")

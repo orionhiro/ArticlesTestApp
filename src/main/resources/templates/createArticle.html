@@ -18,7 +18,7 @@
                         <div class="card-body p-5">
                             <h3 class="h4 text-theme mb-4 text-center">Создание новой статьи</h3>
 
-                            <form th:action="@{/article/create}" method="POST" th:object="${articleDTO}" enctype="multipart/form-data">
+                            <form th:action="@{/articles/create}" method="POST" th:object="${articleDTO}" enctype="multipart/form-data">
                                 <div class="form-group mb-3">
                                     <label for="title">Заголовок</label>
                                     <input type="text" class="form-control" id="title" name="title" placeholder="Введите заголовок" th:value="*{title}">

@@ -2,7 +2,6 @@ package com.orionhiro.ArticlesApp.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -44,7 +43,7 @@ public class ArticleService {
                 .title(articleDTO.getTitle())
                 .author(author)
                 .content(articleDTO.getContent())
-                .image(articleDTO.getImage().getOriginalFilename())
+                .image(articleDTO.getImage().getOriginalFilename().replace(" ", "_"))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build()
@@ -56,11 +55,12 @@ public class ArticleService {
     @SneakyThrows
     private void uploadImage(MultipartFile image){
         if(!image.isEmpty()){
-            imageService.uploadImage(image.getOriginalFilename(), image.getInputStream());
+            imageService.uploadImage(image.getOriginalFilename().replace(" ", "_"), image.getInputStream());
         }
     }
 
     public ArticleDTO findArticleById(long id){
+        log.info(articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).get().toString());
         return articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article with id " + id + " not found")
         );
