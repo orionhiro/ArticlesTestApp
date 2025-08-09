@@ -17,7 +17,7 @@ public class SecurityConfiguration {
         // TODO прописать все пути к защищенным ресурсам
         http.csrf(CsrfConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                                            .requestMatchers("/profile", "/article/create")
+                                            .requestMatchers("/profile", "/articles/create", "/articles/*/edit", "/articles/*/delete")
                                             .authenticated()
                                             .anyRequest()
                                             .permitAll())

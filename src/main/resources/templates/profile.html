@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
+
+    <title>Профиль</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/auth-page.css}" rel="stylesheet">
+  </head>
+
+  <body>
+    <main class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h2 class="h4 text-theme mb-4">Профиль пользователя</h2>
+
+                    <div class="row mb-3">
+                    <div class="col-sm-4 font-weight-bold text-muted">Имя:</div>
+                    <div class="col-sm-8" th:text="${userDTO.name}">Иван Иванов</div>
+                    </div>
+
+                    <div class="row mb-3">
+                    <div class="col-sm-4 font-weight-bold text-muted">Email:</div>
+                    <div class="col-sm-8" th:text="${userDTO.email}">ivan@example.com</div>
+                    </div>
+
+                    <div class="row mb-3">
+                    <div class="col-sm-4 font-weight-bold text-muted">Дата регистрации:</div>
+                    <div class="col-sm-8" th:text="${#temporals.format(userDTO.created_at, 'dd.MM.yyyy, HH:mm')}">15 августа 2025</div>
+                    </div>
+
+                    <div class="row mb-4">
+                    <div class="col-sm-4 font-weight-bold text-muted">Дата рождения:</div>
+                    <div class="col-sm-8" th:text="${userDTO.birthday}">01 января 1990</div>
+                    </div>
+
+                    <a th:href="@{'/search?author_id=' + ${userDTO.id}}" class="btn btn-outline-theme mt-3">Статьи автора</a>
+
+
+                </div>
+                </div>
+
+            </div>
+            </div>
+        </div>
+        </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+
+  </body>
+</html>

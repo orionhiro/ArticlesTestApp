@@ -39,5 +39,11 @@ public class ImageService {
         return Files.exists(fullPath) ? Optional.of(Files.readAllBytes(fullPath)) : Optional.empty();
     }
 
+    @SneakyThrows
+    public void deleteImage(String imagePath){
+        Path fullPath = Path.of(bucket, imagePath);
+        Files.delete(fullPath);
+    }
+
     
 }

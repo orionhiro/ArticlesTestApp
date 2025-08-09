@@ -35,7 +35,7 @@
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title" th:text="${article.title}">Заголовок статьи</h5>
                             <p class="card-text text-muted" th:text="${#temporals.format(article.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</p>
-                            <p class="card-text text-muted mb-3">Автор: <strong th:text="*{article.author.name}">Иван Иванов</strong></p>
+                            <p class="card-text text-muted mb-3">Автор: <a th:href="@{'/profile/' + ${article.author.id}}"><strong th:text="*{article.author.name}">Иван Иванов</strong></a></p>
                             <p class="card-text flex-grow-1" th:text="${#strings.substring(article.content, 0, 100) + '...'}">Краткое описание статьи или вступительный абзац, который заинтересует читателя...</p>
                             <a th:href="@{'/articles/' + ${article.id} + '-' + ${article.url_alias}}" class="btn btn-theme mt-auto">Читать</a>
                         </div>

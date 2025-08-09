@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.orionhiro.ArticlesApp.dto.ArticleDTO;
 import com.orionhiro.ArticlesApp.dto.CreateArticleDTO;
+import com.orionhiro.ArticlesApp.dto.UserDTO;
 import com.orionhiro.ArticlesApp.service.ArticleService;
 import com.orionhiro.ArticlesApp.service.UserService;
 
@@ -69,6 +70,39 @@ public class ArticleController {
         model.addAttribute("articleDTO", articleDTO);
 
         return "showArticle";
+    }
+
+    @GetMapping("/{id:\\d+}/edit")
+    public String editPage(Model model, @PathVariable("id") Long id){
+        ArticleDTO article = articleService.findArticleById(id);
+        model.addAttribute("articleDTO", article);
+        return "edit";
+    }
+
+    @PostMapping("/{id:\\d+}/edit")
+    public String editArticle(
+            @Valid @ModelAttribute("articleDTO") CreateArticleDTO createArticleDTO, 
+            BindingResult bindingResult,
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal UserDetails userDetails){
+        if(bindingResult.hasErrors()){
+            return "edit";
+        }
+
+        UserDTO user = userService.getUserByEmail(userDetails.getUsername());
+        ArticleDTO article = articleService.findArticleById(id);
+        if(user.getId() != article.getAuthor().getId()){
+            return "redirect:/";
+        }
+
+        ArticleDTO articleDTO = articleService.editArticle(id, createArticleDTO);
+        return "redirect:/articles/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
+    }
+
+    @GetMapping("/{id:\\d+}/delete")
+    public String deletePage(@PathVariable("id") Long id){
+        articleService.delete(id);
+        return "redirect:/";
     }
 
 }

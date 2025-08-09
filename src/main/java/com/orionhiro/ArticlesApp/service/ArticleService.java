@@ -1,6 +1,8 @@
 package com.orionhiro.ArticlesApp.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ import com.orionhiro.ArticlesApp.entity.QArticle;
 import com.orionhiro.ArticlesApp.mapper.ArticleMapper;
 import com.orionhiro.ArticlesApp.repository.ArticleRepository;
 import com.orionhiro.ArticlesApp.repository.UserRepository;
+import com.orionhiro.ArticlesApp.utils.QPredicates;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -34,7 +37,7 @@ public class ArticleService {
     private ImageService imageService;
 
     public ArticleDTO createArticle(CreateArticleDTO articleDTO, String authorEmail){
-        uploadImage(articleDTO.getImage());
+        if(articleDTO.getImage() != null) uploadImage(articleDTO.getImage());
         var author = userRepository.findByEmail(authorEmail).get();
 
         Article article = articleRepository.save(
@@ -59,8 +62,11 @@ public class ArticleService {
         }
     }
 
+    private void deleteImage(String image){
+        imageService.deleteImage(image);
+    }
+
     public ArticleDTO findArticleById(long id){
-        log.info(articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).get().toString());
         return articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article with id " + id + " not found")
         );
@@ -85,7 +91,55 @@ public class ArticleService {
     }
 
     public Page<ArticleDTO> findAll(ArticleFilter filter, Pageable pageable){
-        return articleRepository.findAll(QArticle.article.title.isNotEmpty(), pageable)
+        log.info(filter.toString());
+        LocalDateTime dateTime = null;
+        if(filter.getDate() == null){
+            dateTime = null;
+        } else{
+            dateTime = LocalDateTime.of(filter.getDate(), LocalTime.MIN);
+        }
+
+        // log.info(dateTime.toString());
+
+        var predicate = QPredicates.builder()
+                            .add(filter.getAuthor_id(), QArticle.article.author.id::eq)
+                            .add(filter.getTitle(), QArticle.article.title::contains)
+                            .add(dateTime, QArticle.article.createdAt::before)
+                            .build();
+        log.info(predicate.toString());
+
+        return articleRepository.findAll(predicate, pageable)
                 .map(ArticleMapper.INSTANCE::mapToArticleDTO);
+    }
+
+    public ArticleDTO editArticle(long id, CreateArticleDTO editArticleDTO){
+        if(editArticleDTO.getImage() != null) uploadImage(editArticleDTO.getImage());
+
+        return articleRepository.findById(id)
+            .map(entity -> {
+
+                if(!entity.getImage().isEmpty()) deleteImage(entity.getImage());
+
+                entity.setTitle(editArticleDTO.getTitle());
+                entity.setContent(editArticleDTO.getContent());
+                entity.setImage(editArticleDTO.getImage() != null ? editArticleDTO.getImage().getOriginalFilename() : null);
+                entity.setUpdatedAt(LocalDateTime.now());
+
+                return entity;
+
+            })
+            .map(articleRepository::saveAndFlush)
+            .map(ArticleMapper.INSTANCE::mapToArticleDTO).get();
+    }
+
+    public boolean delete(Long id){
+        return articleRepository.findById(id)
+                .map(
+                    entity -> {
+                        articleRepository.delete(entity);
+                        articleRepository.flush();
+                        return true;
+                    }
+                ).orElse(false);
     }
 }

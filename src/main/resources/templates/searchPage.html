@@ -1,0 +1,83 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
+
+    <title>Поиск</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/auth-page.css}" rel="stylesheet">
+  </head>
+
+  <body>
+    <main role="main">
+        <div id="main-wrapper" class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-10">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-3">
+                            <h3 class="h4 text-theme mb-4">Поиск статей</h3>
+
+                            <form action="/search" method="GET">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="searchTitle">Название статьи</label>
+                                        <input type="text" class="form-control" id="searchTitle" name="title" placeholder="Введите название" th:value="${filter.title}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="searchDate">Дата публикации</label>
+                                        <input type="date" class="form-control" id="searchDate" name="date" th:value="${filter.date}">
+                                    </div>
+                                </div>
+                                <input type="hidden" name="author_id" th:value="${filter.author_id}">
+
+                                <button type="submit" class="btn btn-theme mt-1">Найти</button>
+                                <a class="btn text-white btn-theme mt-1" th:href="@{'/search'}">Очистить</a>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mt-4" th:if="${not filter.isBlank()}">
+                        <h4 class="mb-4 text-theme m-4">Результаты поиска</h4>
+                        <h6 class="ml-4" th:if="${not filter.isBlank() and articleList.content.size() == 0}">По вашему запросу ничего не найдено</h6>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-4" th:each="article: ${articleList.content}">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title" th:text="${article.title}">Заголовок статьи</h5>
+                                        <p class="card-text text-muted" th:text="${#temporals.format(article.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</p>
+                                        <p class="card-text text-muted mb-3">Автор: <a th:href="@{'/profile/' + ${article.author.id}}"><strong th:text="*{article.author.name}">Иван Иванов</strong></a></p>
+                                        <p class="card-text flex-grow-1" th:text="${#strings.substring(article.content, 0, 100) + '...'}">Краткое описание статьи или вступительный абзац, который заинтересует читателя...</p>
+                                        <a th:href="@{'/articles/' + ${article.id} + '-' + ${article.url_alias}}" class="btn btn-theme mt-auto">Читать</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <nav aria-label="Пагинация статей" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:if="${articleList.metadata.page} > 0">
+                                <a class="page-link" th:href="@{'/?page=' + ${articleList.metadata.page}}" tabindex="-1">Предыдущая</a>
+                            </li>
+                            <li class="page-item" th:if="${articleList.metadata.page} > 0"><a class="page-link" th:href="@{/search(title=${param.title},date=${param.date},author_id=${param.author_id},page=${articleList.metadata.page})}" th:text="${articleList.metadata.page}">1</a></li>
+                            <li class="page-item active"><a class="page-link" th:href="@{/search(title=${param.title},date=${param.date},author_id=${param.author_id},page=${articleList.metadata.page+1})}" th:text="${articleList.metadata.page + 1}">2</a></li>
+                            <li class="page-item" th:if="${articleList.metadata.page + 1} < ${articleList.metadata.totalPages}"><a class="page-link" th:href="@{/search(title=${param.title},date=${param.date},author_id=${param.author_id},page=${articleList.metadata.page+2})}" th:text="${articleList.metadata.page + 2}">3</a></li>
+                            <li class="page-item" th:if="${articleList.metadata.page} < ${articleList.metadata.totalPages - 1}">
+                                <a class="page-link" th:href="@{/search(title=${param.title},date=${param.date},author_id=${param.author_id},page=${articleList.metadata.page+2})}">Следующая</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
