@@ -45,6 +45,10 @@ public class ArticleController {
             @AuthenticationPrincipal UserDetails userDetails
         ){
 
+        if(!userService.checkIsActivated(userDetails.getUsername())){
+            return "redirect:/profile";
+        }
+
         if(bindingResult.hasErrors()){
             return "createArticle";
         }
@@ -53,9 +57,14 @@ public class ArticleController {
     }
 
     @GetMapping("/{id:\\d+}")
-    public String showArticle(Model model, @PathVariable("id") Long id){
+    public String showArticle(Model model, @PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails){
         ArticleDTO articleDTO = articleService.findArticleById(id);
+        UserDTO userDTO = null;
+        if(userDetails != null){
+            userDTO = userService.getUserByEmail(userDetails.getUsername());
+        }
         model.addAttribute("articleDTO", articleDTO);
+        model.addAttribute("userDTO", userDTO);
 
         return "showArticle";
     }
@@ -64,17 +73,30 @@ public class ArticleController {
     public String showArticleAlias(
             Model model, 
             @PathVariable("id") Long id, 
-            @PathVariable("alias") String alias
+            @PathVariable("alias") String alias,
+            @AuthenticationPrincipal UserDetails userDetails
         ){
         ArticleDTO articleDTO = articleService.findArticleByAlias(id, alias);
+        UserDTO userDTO = null;
+        if(userDetails != null){
+            userDTO = userService.getUserByEmail(userDetails.getUsername());
+        }
+        
         model.addAttribute("articleDTO", articleDTO);
+        model.addAttribute("userDTO", userDTO);
 
         return "showArticle";
     }
 
     @GetMapping("/{id:\\d+}/edit")
-    public String editPage(Model model, @PathVariable("id") Long id){
+    public String editPage(Model model, @PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails){
         ArticleDTO article = articleService.findArticleById(id);
+        UserDTO user = userService.getUserByEmail(userDetails.getUsername());
+
+        if(article.getAuthor().getId() != user.getId()){
+            return "redirect:/profile";
+        }
+
         model.addAttribute("articleDTO", article);
         return "edit";
     }
@@ -100,7 +122,13 @@ public class ArticleController {
     }
 
     @GetMapping("/{id:\\d+}/delete")
-    public String deletePage(@PathVariable("id") Long id){
+    public String deletePage(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails){
+        UserDTO user = userService.getUserByEmail(userDetails.getUsername());
+        ArticleDTO article = articleService.findArticleById(id);
+
+        if(user.getId() != article.getAuthor().getId()){
+            return "redirect:/";
+        }
         articleService.delete(id);
         return "redirect:/";
     }

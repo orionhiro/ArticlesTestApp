@@ -91,7 +91,6 @@ public class ArticleService {
     }
 
     public Page<ArticleDTO> findAll(ArticleFilter filter, Pageable pageable){
-        log.info(filter.toString());
         LocalDateTime dateTime = null;
         if(filter.getDate() == null){
             dateTime = null;
@@ -99,11 +98,9 @@ public class ArticleService {
             dateTime = LocalDateTime.of(filter.getDate(), LocalTime.MIN);
         }
 
-        // log.info(dateTime.toString());
-
         var predicate = QPredicates.builder()
                             .add(filter.getAuthor_id(), QArticle.article.author.id::eq)
-                            .add(filter.getTitle(), QArticle.article.title::contains)
+                            .add(filter.getTitle(), QArticle.article.title::containsIgnoreCase)
                             .add(dateTime, QArticle.article.createdAt::before)
                             .build();
         log.info(predicate.toString());

@@ -32,6 +32,11 @@
                     <div class="card border-0 shadow rounded-3">
                         <div class="card-body p-3" th:object="${articleDTO}">
                             <h1 class="h4 text-theme mb-3 text-center" th:text="*{title}">Заголовок статьи</h1>
+                            <div th:if="${userDTO != null and articleDTO.author.id == userDTO.id}">
+                                <a th:href="@{'/articles/' + ${articleDTO.id} + '/edit'}" class="btn btn-sm btn-outline-primary me-2">Редактировать</a>
+                                <a th:href="@{'/articles/' + ${articleDTO.id} + '/delete'}" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Вы уверены, что хотите удалить эту статью?');">Удалить</a>
+                            </div>
 
                             <p class="text-muted text-center mb-4">Автор: <a th:href="@{'/profile/' + ${articleDTO.author.id}}"><strong th:text="*{author.name}">Иван Иванов</strong></a> | <span th:text="${#temporals.format(articleDTO.created_at, 'dd.MM.yyyy, HH:mm')}">01 августа 2025</span></p>
 
