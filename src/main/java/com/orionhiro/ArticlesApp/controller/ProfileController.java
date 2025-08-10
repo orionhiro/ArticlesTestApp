@@ -24,6 +24,7 @@ public class ProfileController {
     public String getProfile(Model model, @AuthenticationPrincipal UserDetails userDetails){
         UserDTO userDTO = userService.getUserByEmail(userDetails.getUsername());
         model.addAttribute("userDTO", userDTO);
+        model.addAttribute("isOwner", Boolean.valueOf(true));
         return "profile";
     }
 
@@ -31,6 +32,7 @@ public class ProfileController {
     public String getProfileById(Model model, @PathVariable("id") Long id){
         UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("userDTO", userDTO);
+        model.addAttribute("isOwner", Boolean.valueOf(userDTO.getId() == id ? true : false));
         return "profile";
     }
 }
