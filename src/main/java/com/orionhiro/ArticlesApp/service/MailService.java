@@ -17,6 +17,13 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
+
+    /**
+     * Send a mail to the given mail with the given subject and text
+     * @param emailTo Mail receiver
+     * @param subject Mail subject
+     * @param text Mail text
+     */
     public void sendMail(String emailTo, String subject, String text){
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(sender);

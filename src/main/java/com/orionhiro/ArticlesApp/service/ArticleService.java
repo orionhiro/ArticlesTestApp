@@ -36,6 +36,12 @@ public class ArticleService {
     private UserRepository userRepository;
     private ImageService imageService;
 
+    /**
+     * Creates and saves new article
+     * @param articleDTO New article info
+     * @param authorEmail Author email
+     * @return Article info
+     */
     public ArticleDTO createArticle(CreateArticleDTO articleDTO, String authorEmail){
         if(articleDTO.getImage() != null) uploadImage(articleDTO.getImage());
         var author = userRepository.findByEmail(authorEmail).get();
@@ -55,6 +61,10 @@ public class ArticleService {
         return ArticleMapper.INSTANCE.mapToArticleDTO(article);
     }
 
+    /**
+     * Uploads image to the local storage
+     * @param image Image content
+     */
     @SneakyThrows
     private void uploadImage(MultipartFile image){
         if(!image.isEmpty()){
@@ -62,16 +72,34 @@ public class ArticleService {
         }
     }
 
+
+    /**
+     * Deletes image from the local storage
+     * @param image Image path
+     */
     private void deleteImage(String image){
         imageService.deleteImage(image);
     }
 
+
+    /**
+     * Returns article with the given id
+     * @param id Article id
+     * @return Article info
+     */
     public ArticleDTO findArticleById(long id){
         return articleRepository.findById(id).map(ArticleMapper.INSTANCE::mapToArticleDTO).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article with id " + id + " not found")
         );
     }
 
+
+    /**
+     * Returns article with the given alias
+     * @param id Article id
+     * @param alias Article alias
+     * @return Article info
+     */
     public ArticleDTO findArticleByAlias(long id, String alias){
         return articleRepository
                 .findById(id)
@@ -82,6 +110,10 @@ public class ArticleService {
                 );
     }
 
+    /**
+     * Returns list of the all articles
+     * @return List of articles
+     */
     public List<ArticleDTO> findAll(){
         return articleRepository
                 .findAllByOrderByCreatedAtDesc()
@@ -90,6 +122,12 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns page of the filtered articles
+     * @param filter Article filter
+     * @param pageable Page info
+     * @return Page of the filetered articles
+     */
     public Page<ArticleDTO> findAll(ArticleFilter filter, Pageable pageable){
         LocalDateTime dateTime = null;
         if(filter.getDate() == null){
@@ -109,6 +147,12 @@ public class ArticleService {
                 .map(ArticleMapper.INSTANCE::mapToArticleDTO);
     }
 
+    /**
+     * Modifies article info using new article info
+     * @param id Article id
+     * @param editArticleDTO New article info
+     * @return Article info
+     */
     public ArticleDTO editArticle(long id, CreateArticleDTO editArticleDTO){
         if(editArticleDTO.getImage() != null) uploadImage(editArticleDTO.getImage());
 
@@ -129,6 +173,11 @@ public class ArticleService {
             .map(ArticleMapper.INSTANCE::mapToArticleDTO).get();
     }
 
+    /**
+     * Deletes an article with the given id
+     * @param id Article id
+     * @return Status
+     */
     public boolean delete(Long id){
         return articleRepository.findById(id)
                 .map(

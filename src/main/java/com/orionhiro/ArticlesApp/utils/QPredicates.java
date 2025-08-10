@@ -19,6 +19,7 @@ public class QPredicates {
         return new QPredicates();
     }
 
+
     public <T> QPredicates add(T object, Function<T, Predicate> function){
         if(object != null){
             predicates.add(function.apply(object));
@@ -27,11 +28,20 @@ public class QPredicates {
         return this;
     }
 
+
+    /**
+     * Build a single predicate from the list using AND
+     * @return Predicate compilation
+     */
     public Predicate build(){
         return Optional.ofNullable(ExpressionUtils.allOf(predicates))
                 .orElseGet(() -> Expressions.asBoolean(true).isTrue());
     }
 
+    /**
+     * Build a single predicate from the list using OR
+     * @return Predicate compilation
+     */
     public Predicate buildOr(){
         return Optional.ofNullable(ExpressionUtils.anyOf(predicates))
                 .orElseGet(() -> Expressions.asBoolean(true).isTrue());

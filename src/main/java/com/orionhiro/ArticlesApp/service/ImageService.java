@@ -21,6 +21,11 @@ public class ImageService {
         return bucket;
     }
 
+    /**
+     * Upload image to the local storage
+     * @param imagePath Path to the image
+     * @param content Image content
+     */
     @SneakyThrows
     public void uploadImage(String imagePath, InputStream content){
         
@@ -32,6 +37,11 @@ public class ImageService {
         }
     }
 
+    /**
+     * Returns an image with the given the given path
+     * @param imagePath Path to the image
+     * @return Image
+     */
     @SneakyThrows
     public Optional<byte[]> get(String imagePath){
         Path fullPath = Path.of(bucket, imagePath);
@@ -39,6 +49,10 @@ public class ImageService {
         return Files.exists(fullPath) ? Optional.of(Files.readAllBytes(fullPath)) : Optional.empty();
     }
 
+    /**
+     * Deletes an image from the local storage
+     * @param imagePath Path to the image
+     */
     @SneakyThrows
     public void deleteImage(String imagePath){
         Path fullPath = Path.of(bucket, imagePath);

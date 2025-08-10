@@ -33,6 +33,11 @@ public class UserService implements UserDetailsService{
     private PasswordEncoder passwordEncoder;
     private ApplicationEventPublisher eventPublisher;
 
+    /**
+     * Creates and saves new user
+     * @param registerDTO Info of new user
+     * @return Info of created user
+     */
     public UserDTO createUser(RegisterDTO registerDTO){
         User user = userRepository.save(
             User
@@ -53,7 +58,6 @@ public class UserService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // TODO добавить поле role в БД
         return userRepository.findByEmail(email)
                 .map(user -> new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
@@ -63,6 +67,11 @@ public class UserService implements UserDetailsService{
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + email));
     }
 
+
+    /**
+     * Activates user account
+     * @param code Activation code
+     */
     public void activateAccount(String code){
         Optional<User> user = userRepository.findByActivationCode(code);
         if(user.isPresent()){
@@ -71,10 +80,21 @@ public class UserService implements UserDetailsService{
         }
     }
 
+    /**
+     * Checks if account is activated
+     * @param email Account email
+     * @return Activation status
+     */
     public boolean checkIsActivated(String email){
         return userRepository.findByEmail(email).map(User::getIsActive).orElse(false);
     }
 
+
+    /**
+     * Returns a user with the given email
+     * @param email User email
+     * @return User info
+     */
     public UserDTO getUserByEmail(String email){
         return userRepository
                 .findByEmail(email)
@@ -82,6 +102,12 @@ public class UserService implements UserDetailsService{
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Failed to retrieve user: " + email));
     }
 
+
+    /**
+     * Returns a user with the given id
+     * @param id User id
+     * @return User info
+     */
     public UserDTO getUserById(Long id){
         return userRepository
                 .findById(id)
