@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        // TODO прописать все пути к защищенным ресурсам
         http.csrf(CsrfConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                                             .requestMatchers("/profile", "/articles/create", "/articles/*/edit", "/articles/*/delete")
@@ -28,7 +27,7 @@ public class SecurityConfiguration {
                                     .permitAll())
             .logout(logout -> logout
                                     .logoutUrl("/logout")
-                                    .logoutSuccessUrl("/login"));
+                                    .logoutSuccessUrl("/"));
         
         return http.build();
     }

@@ -1,6 +1,5 @@
 package com.orionhiro.ArticlesApp.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -141,7 +140,6 @@ public class ArticleService {
                             .add(filter.getTitle(), QArticle.article.title::containsIgnoreCase)
                             .add(dateTime, QArticle.article.createdAt::before)
                             .build();
-        log.info(predicate.toString());
 
         return articleRepository.findAll(predicate, pageable)
                 .map(ArticleMapper.INSTANCE::mapToArticleDTO);

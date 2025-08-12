@@ -1,0 +1,127 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-test-users
+      author: marek
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Test User 1"
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "12345678"
+              - column:
+                  name: birthday
+                  valueDate: 2025-08-11
+              - column:
+                  name: created_at
+                  valueDate: 2025-08-11T14:30:00
+              - column:
+                  name: is_active
+                  valueBoolean: true
+              - column:
+                  name: activation_code
+                  value: "zzz-zzz-zzz-zzz"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Test User 2"
+              - column:
+                  name: email
+                  value: "user2@example.com"
+              - column:
+                  name: password
+                  value: "123456781"
+              - column:
+                  name: birthday
+                  valueDate: 2025-08-12
+              - column:
+                  name: created_at
+                  valueDate: 2025-08-11T14:30:00
+              - column:
+                  name: is_active
+                  valueBoolean: true
+              - column:
+                  name: activation_code
+                  value: "xxx-xxx-xxx-xxx"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Test User 3"
+              - column:
+                  name: email
+                  value: "user3@example.com"
+              - column:
+                  name: password
+                  value: "1234567812"
+              - column:
+                  name: birthday
+                  valueDate: 2025-08-13
+              - column:
+                  name: created_at
+                  valueDate: 2025-08-13T14:30:00
+              - column:
+                  name: is_active
+                  valueBoolean: false
+              - column:
+                  name: activation_code
+                  value: "yyy-yyy-yyy-yyy"
+        
+        
+        - insert:
+            tableName: articles
+            columns:
+              - column:
+                  name: title
+                  value: "Test Article 1"
+              - column:
+                  name: content
+                  value: "Test content 1"
+              - column:
+                  name: created_at
+                  valueDate: 2025-08-13T14:30:00
+              - column:
+                  name: updated_at
+                  valueDate: 2025-08-13T14:30:00
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: image
+                  value: "testImage1.png"
+              - column:
+                  name: url_alias
+                  value: "1-test-article-1"
+        - insert:
+            tableName: articles
+            columns:
+              - column:
+                  name: title
+                  value: "Test Article 2"
+              - column:
+                  name: content
+                  value: "Test content 2"
+              - column:
+                  name: created_at
+                  valueDate: 2025-08-14T14:30:00
+              - column:
+                  name: updated_at
+                  valueDate: 2025-08-15T14:30:00
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: image
+                  value: "testImage1.png"
+              - column:
+                  name: url_alias
+                  value: "2-test-article-2"

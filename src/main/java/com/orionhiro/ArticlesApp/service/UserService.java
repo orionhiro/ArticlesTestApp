@@ -73,11 +73,10 @@ public class UserService implements UserDetailsService{
      * @param code Activation code
      */
     public void activateAccount(String code){
-        Optional<User> user = userRepository.findByActivationCode(code);
-        if(user.isPresent()){
-            user.get().setIsActive(true);
+        userRepository.findByActivationCode(code).ifPresent((user) -> {
+            user.setIsActive(true);
             userRepository.flush();
-        }
+        });
     }
 
     /**
