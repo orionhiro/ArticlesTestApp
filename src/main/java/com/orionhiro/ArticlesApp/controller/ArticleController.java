@@ -117,7 +117,7 @@ public class ArticleController {
             return "redirect:/";
         }
 
-        ArticleDTO articleDTO = articleService.editArticle(id, createArticleDTO);
+        ArticleDTO articleDTO = articleService.editArticle(id, createArticleDTO).get();
         return "redirect:/articles/" + articleDTO.getId() + "-" + articleDTO.getUrl_alias();
     }
 

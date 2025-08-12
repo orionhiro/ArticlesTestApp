@@ -2,7 +2,6 @@ package com.orionhiro.ArticlesApp.service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -73,10 +72,11 @@ public class UserService implements UserDetailsService{
      * @param code Activation code
      */
     public void activateAccount(String code){
-        userRepository.findByActivationCode(code).ifPresent((user) -> {
-            user.setIsActive(true);
-            userRepository.flush();
-        });
+        var user = userRepository
+            .findByActivationCode(code).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        
+        user.setIsActive(true);
+        userRepository.flush();
     }
 
     /**

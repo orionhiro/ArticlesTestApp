@@ -3,6 +3,7 @@ package com.orionhiro.ArticlesApp.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -43,7 +44,7 @@ public class ArticleService {
      */
     public ArticleDTO createArticle(CreateArticleDTO articleDTO, String authorEmail){
         if(articleDTO.getImage() != null) uploadImage(articleDTO.getImage());
-        var author = userRepository.findByEmail(authorEmail).get();
+        var author = userRepository.findByEmail(authorEmail).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email " + authorEmail + " not found"));
 
         Article article = articleRepository.save(
             Article
@@ -65,7 +66,7 @@ public class ArticleService {
      * @param image Image content
      */
     @SneakyThrows
-    private void uploadImage(MultipartFile image){
+    public void uploadImage(MultipartFile image){
         if(!image.isEmpty()){
             imageService.uploadImage(image.getOriginalFilename().replace(" ", "_"), image.getInputStream());
         }
@@ -76,7 +77,7 @@ public class ArticleService {
      * Deletes image from the local storage
      * @param image Image path
      */
-    private void deleteImage(String image){
+    public void deleteImage(String image){
         imageService.deleteImage(image);
     }
 
@@ -132,7 +133,7 @@ public class ArticleService {
         if(filter.getDate() == null){
             dateTime = null;
         } else{
-            dateTime = LocalDateTime.of(filter.getDate(), LocalTime.MIN);
+            dateTime = LocalDateTime.of(filter.getDate(), LocalTime.MAX);
         }
 
         var predicate = QPredicates.builder()
@@ -151,13 +152,12 @@ public class ArticleService {
      * @param editArticleDTO New article info
      * @return Article info
      */
-    public ArticleDTO editArticle(long id, CreateArticleDTO editArticleDTO){
-        if(editArticleDTO.getImage() != null) uploadImage(editArticleDTO.getImage());
-
+    public Optional<ArticleDTO> editArticle(long id, CreateArticleDTO editArticleDTO){
         return articleRepository.findById(id)
             .map(entity -> {
 
-                if(!entity.getImage().isEmpty()) deleteImage(entity.getImage());
+                if(!entity.getImage().isEmpty() && editArticleDTO.getImage() != null) deleteImage(entity.getImage());
+                if(editArticleDTO.getImage() != null) uploadImage(editArticleDTO.getImage());
 
                 entity.setTitle(editArticleDTO.getTitle());
                 entity.setContent(editArticleDTO.getContent());
@@ -168,7 +168,7 @@ public class ArticleService {
 
             })
             .map(articleRepository::saveAndFlush)
-            .map(ArticleMapper.INSTANCE::mapToArticleDTO).get();
+            .map(ArticleMapper.INSTANCE::mapToArticleDTO);
     }
 
     /**
